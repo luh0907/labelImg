@@ -62,6 +62,7 @@ class Canvas(QWidget):
         self.setFocusPolicy(Qt.WheelFocus)
         self.verified = False
         self.drawSquare = False
+        self.drawQuad = False
 
         #initialisation for panning
         self.pan_initial_pos = QPoint()
@@ -392,6 +393,9 @@ class Canvas(QWidget):
 
         shape.moveVertexBy(index, shiftPos)
 
+        if self.drawQuad:
+            return
+
         lindex = (index + 1) % 4
         rindex = (index + 3) % 4
         lshift = None
@@ -702,3 +706,6 @@ class Canvas(QWidget):
 
     def setDrawingShapeToSquare(self, status):
         self.drawSquare = status
+
+    def setDrawingShapeToQuad(self, status):
+        self.drawQuad = status

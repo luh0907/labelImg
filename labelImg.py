@@ -337,6 +337,13 @@ class MainWindow(QMainWindow, WindowMixin):
         self.drawSquaresOption.setChecked(settings.get(SETTING_DRAW_SQUARE, False))
         self.drawSquaresOption.triggered.connect(self.toogleDrawSquare)
 
+        # Draw quad bound boxes
+        self.drawQuadOption = QAction('Draw QUAD', self)
+        self.drawQuadOption.setShortcut('Ctrl+Shift+Q')
+        self.drawQuadOption.setCheckable(True)
+        self.drawQuadOption.setChecked(settings.get(SETTING_DRAW_QUAD, False))
+        self.drawQuadOption.triggered.connect(self.toggleDrawQuad)
+
         # Store actions for further handling.
         self.actions = struct(save=save, save_format=save_format, saveAs=saveAs, open=open, close=close, resetAll = resetAll, deleteImg = deleteImg,
                               lineColor=color1, create=create, delete=delete, edit=edit, copy=copy,
@@ -349,7 +356,7 @@ class MainWindow(QMainWindow, WindowMixin):
                                   open, opendir, save, saveAs, close, resetAll, quit),
                               beginner=(), advanced=(),
                               editMenu=(edit, copy, delete,
-                                        None, color1, self.drawSquaresOption),
+                                        None, color1, self.drawSquaresOption, self.drawQuadOption),
                               beginnerContext=(create, edit, copy, delete),
                               advancedContext=(createMode, editMode, edit, copy,
                                                delete, shapeLineColor, shapeFillColor),
@@ -1163,6 +1170,7 @@ class MainWindow(QMainWindow, WindowMixin):
         settings[SETTING_SINGLE_CLASS] = self.singleClassMode.isChecked()
         settings[SETTING_PAINT_LABEL] = self.displayLabelOption.isChecked()
         settings[SETTING_DRAW_SQUARE] = self.drawSquaresOption.isChecked()
+        settings[SETTING_DRAW_QUAD] = self.drawQuadOption.isChecked()
         settings[SETTING_LABEL_FILE_FORMAT] = self.labelFileFormat
         settings.save()
 
@@ -1510,7 +1518,14 @@ class MainWindow(QMainWindow, WindowMixin):
             shape.paintLabel = self.displayLabelOption.isChecked()
 
     def toogleDrawSquare(self):
+        self.drawQuadOption.setChecked(False)
         self.canvas.setDrawingShapeToSquare(self.drawSquaresOption.isChecked())
+        self.canvas.setDrawingShapeToQuad(self.drawQuadOption.isChecked())
+
+    def toggleDrawQuad(self):
+        self.drawSquaresOption.setChecked(False)
+        self.canvas.setDrawingShapeToSquare(self.drawSquaresOption.isChecked())
+        self.canvas.setDrawingShapeToQuad(self.drawQuadOption.isChecked())
 
 def inverted(color):
     return QColor(*[255 - v for v in color.getRgb()])
