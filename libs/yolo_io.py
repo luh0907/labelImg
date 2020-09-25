@@ -22,8 +22,11 @@ class YOLOWriter:
         self.localImgPath = localImgPath
         self.verified = False
 
-    def addBndBox(self, xmin, ymin, xmax, ymax, name, difficult):
-        bndbox = {'xmin': xmin, 'ymin': ymin, 'xmax': xmax, 'ymax': ymax}
+    def addBndBox(self, xmin, ymin, xmax, ymax,
+                  x1, y1, x2, y2, x3, y3, x4, y4,
+                  name, difficult):
+        bndbox = {'xmin': xmin, 'ymin': ymin, 'xmax': xmax, 'ymax': ymax,
+                  'x1': x1, 'y1': y1, 'x2': x2, 'y2': y2, 'x3': x3, 'y3': y3, 'x4': x4, 'y4': y4}
         bndbox['name'] = name
         bndbox['difficult'] = difficult
         self.boxlist.append(bndbox)

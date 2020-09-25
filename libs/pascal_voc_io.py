@@ -77,8 +77,12 @@ class PascalVocWriter:
         segmented.text = '0'
         return top
 
-    def addBndBox(self, xmin, ymin, xmax, ymax, name, difficult):
-        bndbox = {'xmin': xmin, 'ymin': ymin, 'xmax': xmax, 'ymax': ymax}
+    def addBndBox(self, xmin, ymin, xmax, ymax, 
+                  x1, y1, x2, y2, x3, y3, x4, y4,
+                  name, difficult):
+        bndbox = {'xmin': xmin, 'ymin': ymin, 'xmax': xmax, 'ymax': ymax,
+                  'x1': int(x1), 'y1': int(y1), 'x2': int(x2), 'y2': int(y2),
+                  'x3': int(x3), 'y3': int(y3), 'x4': int(x4), 'y4': int(y4)}
         bndbox['name'] = name
         bndbox['difficult'] = difficult
         self.boxlist.append(bndbox)
@@ -108,6 +112,23 @@ class PascalVocWriter:
             xmax.text = str(each_object['xmax'])
             ymax = SubElement(bndbox, 'ymax')
             ymax.text = str(each_object['ymax'])
+
+            x1 = SubElement(bndbox, 'x1')
+            x1.text = str(each_object['x1'])
+            y1 = SubElement(bndbox, 'y1')
+            y1.text = str(each_object['y1'])
+            x2 = SubElement(bndbox, 'x2')
+            x2.text = str(each_object['x2'])
+            y2 = SubElement(bndbox, 'y2')
+            y2.text = str(each_object['y2'])
+            x3 = SubElement(bndbox, 'x3')
+            x3.text = str(each_object['x3'])
+            y3 = SubElement(bndbox, 'y3')
+            y3.text = str(each_object['y3'])
+            x4 = SubElement(bndbox, 'x4')
+            x4.text = str(each_object['x4'])
+            y4 = SubElement(bndbox, 'y4')
+            y4.text = str(each_object['y4'])
 
     def save(self, targetFile=None):
         root = self.genXML()
@@ -141,11 +162,22 @@ class PascalVocReader:
         return self.shapes
 
     def addShape(self, label, bndbox, difficult):
-        xmin = int(float(bndbox.find('xmin').text))
-        ymin = int(float(bndbox.find('ymin').text))
-        xmax = int(float(bndbox.find('xmax').text))
-        ymax = int(float(bndbox.find('ymax').text))
-        points = [(xmin, ymin), (xmax, ymin), (xmax, ymax), (xmin, ymax)]
+        if not bndbox.find('x1') is None:
+            x1 = int(float(bndbox.find('x1').text))
+            y1 = int(float(bndbox.find('y1').text))
+            x2 = int(float(bndbox.find('x2').text))
+            y2 = int(float(bndbox.find('y2').text))
+            x3 = int(float(bndbox.find('x3').text))
+            y3 = int(float(bndbox.find('y3').text))
+            x4 = int(float(bndbox.find('x4').text))
+            y4 = int(float(bndbox.find('y4').text))
+            points = [(x1, y1), (x2, y2), (x3, y3), (x4, y4)]
+        else:
+            xmin = int(float(bndbox.find('xmin').text))
+            ymin = int(float(bndbox.find('ymin').text))
+            xmax = int(float(bndbox.find('xmax').text))
+            ymax = int(float(bndbox.find('ymax').text))
+            points = [(xmin, ymin), (xmax, ymin), (xmax, ymax), (xmin, ymax)]
         self.shapes.append((label, points, None, None, difficult))
 
     def parseXML(self):
